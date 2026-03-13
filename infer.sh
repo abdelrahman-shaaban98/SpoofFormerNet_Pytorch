@@ -1,1 +1,0 @@
-python infer.py --image data/test_img/color/5_1.avi_150_real.jpg --checkpoint checkpoints/best_model.pt --image-size 256 --device cuda
