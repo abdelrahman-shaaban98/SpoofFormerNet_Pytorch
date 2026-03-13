@@ -1,4 +1,5 @@
 from typing import  Tuple
+import numpy as np
 from PIL import Image
 
 import torch
@@ -13,6 +14,11 @@ COLOR_MEAN = (0.5, 0.5, 0.5)
 COLOR_STD  = (0.5, 0.5, 0.5)
 DEPTH_MEAN = (0.5,)
 DEPTH_STD  = (0.5,)
+
+
+def np_softmax(x: np.ndarray) -> np.ndarray:
+    e = np.exp(x - x.max(axis=-1, keepdims=True))
+    return e / e.sum(axis=-1, keepdims=True)
 
 
 def preprocess_image(path: str, image_size: int = 256) -> Tuple[torch.Tensor, torch.Tensor]:

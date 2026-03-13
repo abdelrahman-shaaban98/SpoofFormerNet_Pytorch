@@ -39,7 +39,6 @@ class WeightedMSA(nn.Module):
     (Search by "we propose the implementation of a weighted multi-head..." in paper).
     Weighted Multi-Head Self-Attention.
     Each attention head is assigned a learnable scalar priority weight.
-
     Equations (9-11)
     """
     def __init__(self, dim: int, num_heads: int = 8, dropout: float = 0.0):
@@ -81,7 +80,7 @@ class LocalWindowAttention(nn.Module):
     (Search by "the Window-Local transformer block is intended to capture..." in paper).
     Local window weighted multi-head self-attention (LW-WMSA).
     Partitions tokens into non-overlapping windows of size W_L x W_L,
-    applies WMSA within each window (Section 3.3).
+    applies WMSA within each window.
     """
     def __init__(self, dim: int, num_heads: int = 8,
                  window_size: int = 7, dropout: float = 0.0):
@@ -142,7 +141,7 @@ class SparseGlobalAttention(nn.Module):
 
         # Uniform sampling across the spatial sequence
         idx = torch.linspace(0, N - 1, k, dtype=torch.long, device=x.device)
-        sparse = x[:, idx, :]        # B, k, C – sparse window tokens
+        sparse = x[:, idx, :]        # B, k, C – sparse window tokens, instead of B, N, C
 
         sparse_out = self.wmsa(sparse).to(torch.float32)
 
@@ -169,8 +168,8 @@ class WindowLocalBlock(nn.Module):
         self.ffn   = ConvFFN(dim, int(dim * mlp_ratio), dropout)
 
     def forward(self, x: torch.Tensor, H: int, W: int) -> torch.Tensor:
-        x = x + self.attn(self.norm1(x), H, W)   # Eq. 1-2
-        x = x + self.ffn(self.norm2(x), H, W)    # Eq. 3-4
+        x = x + self.attn(self.norm1(x), H, W)  # Eq. 1-2
+        x = x + self.ffn(self.norm2(x), H, W)   # Eq. 3-4
         return x
 
 
@@ -189,8 +188,8 @@ class SGlobalBlock(nn.Module):
         self.ffn   = ConvFFN(dim, int(dim * mlp_ratio), dropout)
 
     def forward(self, x: torch.Tensor, H: int, W: int) -> torch.Tensor:
-        x = x + self.attn(self.norm1(x))   # Eq. 5-6
-        x = x + self.ffn(self.norm2(x), H, W)    # Eq. 7-8
+        x = x + self.attn(self.norm1(x))        # Eq. 5-6
+        x = x + self.ffn(self.norm2(x), H, W)   # Eq. 7-8
         return x
 
 

@@ -76,7 +76,7 @@ def evaluate(
         loss, accuracy, apcer, bpcer, acer, eer, auc
     """
     model.eval()
-    total_loss = 0.0
+    total_loss  = 0.0
     all_scores  = [] # score of 'real' class probability
     all_labels  = []
 
@@ -88,7 +88,7 @@ def evaluate(
             loss   = criterion(logits, labels)
 
         probs = torch.softmax(logits, dim=-1)[:, 1]   # P(real)
-        total_loss  += loss.item() * labels.size(0)
+        total_loss += loss.item() * labels.size(0)
         all_scores.append(probs.cpu())
         all_labels.append(labels.cpu())
 
@@ -143,10 +143,9 @@ def train(run, cfg: dict = CFG):
 
     scaler = GradScaler() if use_amp else None
 
-    #  State
-    best_acer      = float("inf")
-    best_weights   = None
-    no_improve     = 0
+    # State
+    best_acer  = float("inf")
+    no_improve = 0
 
     print(f"{'Ep':>4}  "
           f"{'Tr Loss':>8}  {'Tr Acc':>7}  "
@@ -169,12 +168,12 @@ def train(run, cfg: dict = CFG):
         )
 
         # Validate 
-        val_metrics = evaluate(
-            model    = model,
-            loader   = test_loader,
-            criterion= criterion,
-            device   = device,
-            use_amp  = use_amp,
+        val_metrics   = evaluate(
+            model     = model,
+            loader    = test_loader,
+            criterion = criterion,
+            device    = device,
+            use_amp   = use_amp,
         )
 
 
@@ -192,10 +191,8 @@ def train(run, cfg: dict = CFG):
 
         # Best checkpoint
         if improved:
-            best_acer    = val_metrics["acer"]
-            best_weights = copy.deepcopy(model.state_dict())
-            no_improve   = 0
-
+            best_acer  = val_metrics["acer"]
+            no_improve = 0
 
             save_path = save_dir / "best_model.pt"
             save_model(save_path, epoch, model, optimizer, cfg, val_metrics)

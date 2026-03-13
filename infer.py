@@ -1,15 +1,17 @@
 import argparse
+import onnxruntime as ort
 
 import torch
 import torch.nn.functional as F
 
-from utils import preprocess_image, load_model
+from utils import preprocess_image, load_model, np_softmax
 from visualize import visualise_result
 
 
 LABEL_TEXT  = {0: "FAKE", 1: "REAL"}
 IMAGE_SIZE = 256
 THRESHOLD = 0.5
+
 
 def infer(
     image_path:      str,
@@ -38,27 +40,32 @@ def infer(
         if infer_type == "torch":
             model = load_model(model_path, device)
             logits = model(rgb_tensor, depth_tensor)
-        
+            probs  = F.softmax(logits, dim=-1).squeeze(0) 
+
         elif infer_type == "torchscript":
             model = torch.jit.load(model_path, map_location=device)
             model.eval()
             logits = model(rgb_tensor, depth_tensor)
-        
+            probs  = F.softmax(logits, dim=-1).squeeze(0) 
+
         elif infer_type == "onnx":
-            pass #TODO to implement
+            sess = ort.InferenceSession(model_path,
+                                        providers=["CUDAExecutionProvider"])
+            ort_inputs = {
+                sess.get_inputs()[0].name: rgb_tensor.cpu().numpy().astype("float32"),
+                sess.get_inputs()[1].name: depth_tensor.cpu().numpy().astype("float32"),
+            }
+            logits = sess.run(None, ort_inputs)[0]
+            probs  = torch.tensor(np_softmax(logits).squeeze(0)) 
         
         else:
             pass #TODO Through an exception
-
-        probs  = F.softmax(logits, dim=-1).squeeze(0) 
-
 
     prob_real  = probs[1].item()
     prob_fake  = probs[0].item()
     label_id   = int(prob_real >= THRESHOLD)
     confidence = prob_real if label_id == 1 else prob_fake
     verdict    = LABEL_TEXT[label_id]
-
 
     print("\n" + "-" * 65)
     print(f"  {'Verdict':<18}: {verdict}")
@@ -67,7 +74,6 @@ def infer(
     print(f"  {'P(FAKE)':<18}: {prob_fake * 100:.2f}%")
     print(f"  {'Threshold':<18}: {THRESHOLD}")
     print("-" * 65 + "\n")
-
 
     if save_vis:
         vis_path = vis_path.replace(".png", f"_{infer_type}.png")
