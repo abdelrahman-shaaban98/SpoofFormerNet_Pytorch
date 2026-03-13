@@ -323,17 +323,17 @@ def build_spoof_former_net(variant: str = "base") -> SpoofFormerNet:
     Build SpoofFormerNet with predefined configurations.
 
     Variants:
-      'tiny'    Fast testing                        [3.14 M params]
-      'base'    Similar to the paper but smaller    [22.87 M params]
+      'tiny'    Fast testing                        [0.81 M params]
+      'base'    Similar to the paper but smaller    [5.83 M params]
     """
     configs = {
         "tiny": dict(
-            base_dim=32, stem_layers=2, num_levels=4,
+            base_dim=16, stem_layers=2, num_levels=4,
             num_branches=3, blocks_per_branch=[1, 1, 1, 1],
             num_heads=4, window_size=7, dropout=0.1,
         ),
         "base": dict(
-            base_dim=32, stem_layers=2, num_levels=5,
+            base_dim=16, stem_layers=2, num_levels=5,
             num_branches=4, blocks_per_branch=[2, 2, 2, 2],
             num_heads=4, window_size=7, dropout=0.1,
         ),

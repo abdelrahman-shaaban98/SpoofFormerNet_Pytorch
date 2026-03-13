@@ -5,7 +5,7 @@ CFG = dict(
     test_color_dir  = "data/test_img/color",
     test_depth_dir  = "data/test_img/depth_generated",
     image_size      = 256,
-    batch_size      = 2,
+    batch_size      = 4,
     num_workers     = 8,
     balance_classes = True,       # WeightedRandomSampler on train set
 
