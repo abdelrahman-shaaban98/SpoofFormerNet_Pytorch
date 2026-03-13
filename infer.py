@@ -63,8 +63,8 @@ def infer(
     print("\n" + "-" * 65)
     print(f"  {'Verdict':<18}: {verdict}")
     print(f"  {'Confidence':<18}: {confidence * 100:.2f}%")
-    print(f"  {'P(REAL / genuine)':<18}: {prob_real * 100:.2f}%")
-    print(f"  {'P(FAKE / spoof)':<18}: {prob_fake * 100:.2f}%")
+    print(f"  {'P(REAL)':<18}: {prob_real * 100:.2f}%")
+    print(f"  {'P(FAKE)':<18}: {prob_fake * 100:.2f}%")
     print(f"  {'Threshold':<18}: {THRESHOLD}")
     print("-" * 65 + "\n")
 

@@ -172,7 +172,7 @@ class SpoofDataset(Dataset):
             n_fake = len(self.samples) - n_real
             print(
                 f"[SpoofDataset] Loaded {len(self.samples)} pairs from '{color_dir}'\n"
-                f"  Real (genuine): {n_real} | Fake (spoof): {n_fake}"
+                f"  Real: {n_real} | Fake: {n_fake}"
             )
 
 
