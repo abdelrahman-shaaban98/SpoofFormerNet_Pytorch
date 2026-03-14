@@ -34,7 +34,7 @@ class MultiScaleTokenEmbedding(nn.Module):
                 nn.Conv2d(
                     in_channels, self.sub_dim,
                     kernel_size=ps, stride=stride,
-                    padding=ps // 2, bias=False
+                    padding=(ps // 2), bias=False
                 ),
                 nn.BatchNorm2d(self.sub_dim),
             )

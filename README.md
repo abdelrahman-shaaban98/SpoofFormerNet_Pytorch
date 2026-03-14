@@ -15,6 +15,7 @@ SpoofFormerNet fuses RGB color and monocular depth streams through a multi-branc
   - [Project Structure](#project-structure)
   - [Setup](#setup)
   - [Data Preparation](#data-preparation)
+    - [Download the data from https://www.kaggle.com/datasets/minhnh2107/casiafasd/data](#download-the-data-from-httpswwwkagglecomdatasetsminhnh2107casiafasddata)
     - [Pre-generate depth maps (required before training)](#pre-generate-depth-maps-required-before-training)
     - [Verify data loading](#verify-data-loading)
   - [Training](#training)
@@ -24,7 +25,7 @@ SpoofFormerNet fuses RGB color and monocular depth streams through a multi-branc
     - [ONNX](#onnx)
   - [Metrics](#metrics)
   - [Configuration](#configuration)
-
+  - [Training Stats](#training-stats)
 ---
 
 ## Overview
@@ -39,7 +40,7 @@ Face anti-spoofing (FAS) is the task of detecting whether a presented face is a 
 
 ## Architecture
 
-
+![Architecture](images/arch.png)
 
 **Model variants:**
 
@@ -99,6 +100,8 @@ pip install -r requirements.txt
 ---
 
 ## Data Preparation
+
+### Download the data from https://www.kaggle.com/datasets/minhnh2107/casiafasd/data
 
 ### Pre-generate depth maps (required before training)
 
@@ -170,6 +173,8 @@ python infer.py \
 ```
 
 All inference modes save a visualization to `images/inference_result_<type>.png` showing the RGB input, estimated depth map, and a confidence bar chart.
+
+![Inference Result](images/inference_result_torchscript.png)
 
 ---
 
@@ -249,3 +254,8 @@ CFG = dict(
     min_delta       = 1e-4,
 )
 ```
+
+---
+
+## Training Stats
+![Training Stats](images/stats.png)

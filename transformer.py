@@ -139,7 +139,7 @@ class SparseGlobalAttention(nn.Module):
         B, N, C = x.shape
         k = min(self.num_sparse, N)
 
-        # Uniform sampling across the spatial sequence
+        # Even-space sampling across the spatial sequence
         idx = torch.linspace(0, N - 1, k, dtype=torch.long, device=x.device)
         sparse = x[:, idx, :]        # B, k, C – sparse window tokens, instead of B, N, C
 
